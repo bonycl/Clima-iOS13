@@ -17,6 +17,16 @@ class WeatherViewController: UIViewController  {
     @IBOutlet weak var cityLabel: UILabel!
     @IBOutlet weak var searchTextField: UITextField!
     
+    @IBOutlet weak var humImage: UIImageView!
+    @IBOutlet weak var windImage: UIImageView!
+    @IBOutlet weak var minTempImage: UIImageView!
+    @IBOutlet weak var minTempResult: UILabel!
+    
+    @IBOutlet weak var maxTempImage: UIImageView!
+    @IBOutlet weak var maxTempResult: UILabel!
+    @IBOutlet weak var humidityResult: UILabel!
+    @IBOutlet weak var windSpeedResult: UILabel!
+    
     var weatherManager = WeatherManager()
     var locationManager = CLLocationManager()
     var timer = Timer()
@@ -30,18 +40,13 @@ class WeatherViewController: UIViewController  {
         
         weatherManager.delegate = self
         searchTextField.delegate = self
+        
+//        locationManager(<#CLLocationManager#>, didUpdateLocations: <#[CLLocation]#>)
 //        updateWeather()
-        if let location = locationManager.location {
-            locationManager.stopUpdatingLocation()
-            let lat = location.coordinate.latitude
-            let lot = location.coordinate.longitude
-            
-            // Вызываем метод для загрузки погоды по текущему местоположению
-            weatherManager.fetchWeather(latitude: lat, longitude: lot)
-            
-            
-        }
+        setupAnimatedLabels()
+        
         timer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(updateWeather), userInfo: nil, repeats: true)
+        
     }
     
     @IBAction func locationPressed(_ sender: UIButton) {
@@ -56,13 +61,35 @@ class WeatherViewController: UIViewController  {
             
             // Вызываем метод для загрузки погоды по текущему местоположению
             weatherManager.fetchWeather(latitude: lat, longitude: lot)
-            
-            
         }
     }
-}
-//MARK: - UITextFieldDelegate
 
+    func setupAnimatedLabels() {
+        humImage.image = UIImage(systemName: "drop.halffull")
+        humImage.contentMode = .center
+        humImage.tintColor = .label
+        humImage.addSymbolEffect(.pulse.byLayer, options: .repeating.speed(0.7))
+            
+        windImage.image = UIImage(systemName: "wind")
+        windImage.contentMode = .center
+        windImage.tintColor = .label
+        windImage.addSymbolEffect(.pulse.byLayer, options: .repeating.speed(0.7))
+        
+        minTempImage.image = UIImage(systemName: "thermometer.low")
+        minTempImage.contentMode = .scaleAspectFit
+        minTempImage.tintColor = .label
+        minTempImage.addSymbolEffect(.pulse.byLayer, options: .repeating.speed(0.7))
+        
+        maxTempImage.image = UIImage(systemName: "thermometer.high")
+        maxTempImage.contentMode = .scaleAspectFit
+        maxTempImage.tintColor = .label
+        maxTempImage.addSymbolEffect(.pulse.byLayer, options: .repeating.speed(0.7))
+        
+    }
+     
+}
+
+//MARK: - UITextFieldDelegate
 
 extension WeatherViewController: UITextFieldDelegate {
     @IBAction func searchPressed(_ sender: UIButton) {
@@ -103,6 +130,9 @@ extension WeatherViewController: WeatherManagerDelegate {
             self.temperatureLabel.text = weather.temperatureString
             self.conditionImageView.image = UIImage(systemName: weather.conditionName)
             self.cityLabel.text = weather.cityName
+            self.minTempResult.text = weather.minTemperatureString
+            self.maxTempResult.text = weather.maxTemperatureString
+            self.humidityResult.text = String(weather.humidity)
         } // print(weather.temperature)
     }
     

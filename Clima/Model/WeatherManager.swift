@@ -15,7 +15,7 @@ protocol WeatherManagerDelegate {
 }
 
 struct WeatherManager {
-    let weatherURL = "https://api.openweathermap.org/data/2.5/weather?&appid=62847c8c821f5e0b937333fd49880838&units=metric"
+   private let weatherURL = "https://api.openweathermap.org/data/2.5/weather?&appid=62847c8c821f5e0b937333fd49880838&units=metric"
     
     var delegate: WeatherManagerDelegate?
     
@@ -66,8 +66,12 @@ struct WeatherManager {
             let id = decodedData.weather[0].id
             let temp = decodedData.main.temp
             let name = decodedData.name
+            let minTemp = decodedData.main.temp_min
+            let maxTemp = decodedData.main.temp_max
+            let humidity = decodedData.main.humidity
+            let windSpeed = decodedData.wind.speed
             
-            let weather = WeatherModel(conditionId: id, cityName: name, temperature: temp)
+            let weather = WeatherModel(conditionId: id, cityName: name, temperature: temp, minTemperature: minTemp, maxTemperature: maxTemp, humidity: Int(humidity), windy: windSpeed)
             
             
             

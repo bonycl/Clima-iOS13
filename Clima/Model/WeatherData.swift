@@ -22,6 +22,8 @@ struct Main: Codable {
     let pressure: Int
     let humidity: Double
     let feels_like: Double
+    let temp_min: Double
+    let temp_max: Double
 }
 struct Weather: Codable {
     let id: Int
