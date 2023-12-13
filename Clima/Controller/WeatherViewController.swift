@@ -15,11 +15,11 @@ class WeatherViewController: UIViewController  {
     @IBOutlet weak var conditionImageView: UIImageView!
     @IBOutlet weak var temperatureLabel: UILabel!
     @IBOutlet weak var cityLabel: UILabel!
-    
     @IBOutlet weak var searchTextField: UITextField!
     
     var weatherManager = WeatherManager()
     var locationManager = CLLocationManager()
+    var timer = Timer()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,9 +30,35 @@ class WeatherViewController: UIViewController  {
         
         weatherManager.delegate = self
         searchTextField.delegate = self
+//        updateWeather()
+        if let location = locationManager.location {
+            locationManager.stopUpdatingLocation()
+            let lat = location.coordinate.latitude
+            let lot = location.coordinate.longitude
+            
+            // Вызываем метод для загрузки погоды по текущему местоположению
+            weatherManager.fetchWeather(latitude: lat, longitude: lot)
+            
+            
+        }
+        timer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(updateWeather), userInfo: nil, repeats: true)
     }
+    
     @IBAction func locationPressed(_ sender: UIButton) {
         locationManager.requestLocation()
+    }
+    
+    @objc func updateWeather() {
+        if let location = locationManager.location {
+            locationManager.stopUpdatingLocation()
+            let lat = location.coordinate.latitude
+            let lot = location.coordinate.longitude
+            
+            // Вызываем метод для загрузки погоды по текущему местоположению
+            weatherManager.fetchWeather(latitude: lat, longitude: lot)
+            
+            
+        }
     }
 }
 //MARK: - UITextFieldDelegate
@@ -93,6 +119,7 @@ extension WeatherViewController: CLLocationManagerDelegate {
             let lat = location.coordinate.latitude
             let lot = location.coordinate.longitude
             
+            // Вызываем метод для загрузки погоды по текущему местоположению
             weatherManager.fetchWeather(latitude: lat, longitude: lot)
             
         }

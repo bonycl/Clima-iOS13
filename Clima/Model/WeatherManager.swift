@@ -47,12 +47,9 @@ struct WeatherManager {
                     return
                 }
                 if let safeData = data {
-                    //                    let dataString = String(data: safeData, encoding: .utf8)
-                    //                    print(dataString!)
                     if let weather = self.parseJSON(safeData) {
                         self.delegate?.didUpdateWeather(self, weather: weather)
-                        //                        let weatherVC = WeatherViewController ()
-                        //                        weatherVC.didUpdateWeather(weather: weather)
+                       
                     }
                 }
             }
